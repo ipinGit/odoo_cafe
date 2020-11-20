@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hpp_product_recipe_user,product.hpp.product.product_recipe.user,product_hpp.model_product_recipe,product_hpp.group_hpp_manager,1,1,1,1
+access_hpp_product_recipe_manager,product.hpp.product.product_recipe.manager,product_hpp.model_product_recipe,base.group_system,1,1,1,1
+access_hpp_product_ingredient_user,product.hpp.product.ingredient.user,product_hpp.model_product_ingredient,product_hpp.group_hpp_manager,1,1,1,1
+access_hpp_product_ingredient_manager,product.hpp.product.ingredient.manager,product_hpp.model_product_ingredient,base.group_system,1,1,1,1
+access_hpp_product_conversion_user,product.hpp.product.conversion.user,product_hpp.model_product_conversion,product_hpp.group_hpp_manager,1,1,1,1
+access_hpp_product_conversion_manager,product.hpp.product.conversion.manager,product_hpp.model_product_conversion,base.group_system,1,1,1,1
