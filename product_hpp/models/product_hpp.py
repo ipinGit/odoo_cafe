@@ -11,14 +11,14 @@ class ProductRecipe(models.Model):
     ingredient_ids = fields.One2many('product.ingredient', 'recipe_ref', string='Product Ingredients')
     hpp = fields.Float(string='HPP(%)', compute='_compute_hpp')
     hpp_cost = fields.Float(string='HPP', compute='_compute_hpp')
-    product_id = fields.Many2one('product.product', string='Related Product', domain=[('sale_ok', '=', True)])
+    product_id = fields.Many2one('product.template', string='Related Product', domain=[('sale_ok', '=', True)])
     name = fields.Char('Name')
     recipe_type = fields.Selection([('food', 'Food'), ('beverage', 'Beverage')], string='Recipe Type', default='food')
 
     sale_price = fields.Float(string='Sale Price')
 
     @api.one
-    @api.depends('ingredient_ids', 'ingredient_ids.cost')
+    @api.depends('ingredient_ids', 'ingredient_ids.cost', 'sale_price')
     def _compute_hpp(self):
         for r in self:
             r.hpp_cost = sum([r.cost for r in r.ingredient_ids])
@@ -32,23 +32,25 @@ class ProductRecipe(models.Model):
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    conversion_ids = fields.One2many('product.conversion', 'product_tpl_id', string='Conversion Table')
-
-
-class Product(models.Model):
-    _inherit = 'product.product'
-
     conversion_ids = fields.One2many('product.conversion', 'product_id', string='Conversion Table')
+    prod_type = fields.Selection([('food', 'Food'), ('beverage', 'Beverage')], string='Product Type',
+                                 help='Select to what division this product belogs to', default='food')
+
+
+# class Product(models.Model):
+#     _inherit = 'product.template'
+
+#     conversion_ids = fields.One2many('product.conversion', 'product_id', string='Conversion Table')
 
 
 class ProductIngredient(models.Model):
     _name = 'product.ingredient'
 
     recipe_ref = fields.Many2one('product.recipe', string='Reference Recipe')
-    product_id = fields.Many2one('product.product', string='Product Ingredient', domain=[('purchase_ok', '=', True)], required=True)
+    product_id = fields.Many2one('product.template', string='Product Ingredient', domain=[('purchase_ok', '=', True)], required=True)
     qty = fields.Float('Quantity', required=True)
     uom_id = fields.Many2one('uom.uom', string='Unit of Measure', required=True)
-    cost = fields.Float('Cost', readonly=True)
+    cost = fields.Float('Cost')
 
     @api.onchange('qty', 'product_id', 'uom_id')
     def _onchange_qty(self):
@@ -68,5 +70,5 @@ class UomConvertion(models.Model):
 
     uom_id = fields.Many2one('uom.uom', string='Unit of Measure')
     factor = fields.Float('Factor')
-    product_id = fields.Many2one('product.product', string='Reference Product')
-    product_tpl_id = fields.Many2one('product.template', string='Reference Product')
+    product_id = fields.Many2one('product.template', string='Reference Product')
+    # product_tpl_id = fields.Many2one('product.template', string='Reference Product')

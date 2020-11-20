@@ -3,10 +3,10 @@
     <record id="view_product_hpp" model="ir.ui.view">
         <field name="name">product.hpp.form</field>
         <field name="model">product.template</field>
-        <field name="inherit_id" ref="product.product_template_form_view" />
-        <field eval="1" name="priority"/>
+        <field name="inherit_id" ref="product.product_template_only_form_view" />
+        <field eval="999" name="priority"/>
         <field name="arch" type="xml">
-            <page name="general_information" position="after">
+            <page name="variants" position="after">
                 <page string="Conversion Table" name="product_uom_convesoion_table" attrs="{'invisible':[('sale_ok','=', True)]}">
                     <field name="conversion_ids">
                         <tree string="Conversion Table" editable="bottom">
@@ -32,6 +32,7 @@
                             <field name="recipe_type"/>
                         </group>
                         <group>
+                            <field name="sale_price"/>
                             <field name="hpp_cost"/>
                             <field name="hpp"/>
                         </group>
