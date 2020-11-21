@@ -37,12 +37,6 @@ class ProductTemplate(models.Model):
                                  help='Select to what division this product belogs to', default='food')
 
 
-# class Product(models.Model):
-#     _inherit = 'product.template'
-
-#     conversion_ids = fields.One2many('product.conversion', 'product_id', string='Conversion Table')
-
-
 class ProductIngredient(models.Model):
     _name = 'product.ingredient'
 
@@ -51,18 +45,34 @@ class ProductIngredient(models.Model):
     qty = fields.Float('Quantity', required=True)
     uom_id = fields.Many2one('uom.uom', string='Unit of Measure', required=True)
     cost = fields.Float('Cost')
+    name = fields.Char('Description')
+
+    @api.onchange('product_id', 'qty', 'uom_id')
+    def _onchage_product_id(self):
+        to_disc = ''
+        if self.product_id:
+            product_lang = self.product_id.with_context(
+                lang=self.env.user.partner_id.lang,
+                partner_id=self.env.user.partner_id.id,
+            )
+            to_disc = product_lang.display_name
+        if self.qty:
+            to_disc += ' - ' + str(self.qty)
+        if self.uom_id:
+            to_disc += ' - ' + self.uom_id.name
+        self.name = to_disc
 
     @api.onchange('qty', 'product_id', 'uom_id')
     def _onchange_qty(self):
-        _logger.info('================= %s -- %s -- %s ' % (self.product_id, self.qty, self.uom_id))
-        if self.product_id and self.qty and self.uom_id:
-            for c in self.product_id.conversion_ids:
-                _logger.info('conversion == %s', c.factor)
+        uom_from = self.product_id and self.product_id.uom_id
+        uom_to = self.uom_id
+        if self.product_id and self.qty and uom_to and uom_from:
             factor_from = self.env['product.conversion'].search([('product_id', '=', self.product_id.id), ('uom_id', '=', self.uom_id.id)], limit=1)
             factor_to = self.env['product.conversion'].search([('product_id', '=', self.product_id.id), ('uom_id', '=', self.product_id.uom_id.id)], limit=1)
-            _logger.info('================= %s, = =  %s ' % (factor_to, factor_from))
-
-            self.cost = factor_from and factor_to and 1.0*factor_to.factor/factor_from.factor*self.product_id.standard_price*self.qty or 0.0
+            if uom_from.category_id == uom_to.category_id:
+                self.cost = uom_from._compute_price(self.product_id.standard_price*self.qty, uom_to)
+            else:
+                self.cost = factor_from and factor_to and 1.0*factor_to.factor/factor_from.factor*self.product_id.standard_price*self.qty or 0.0
 
 
 class UomConvertion(models.Model):
@@ -71,4 +81,3 @@ class UomConvertion(models.Model):
     uom_id = fields.Many2one('uom.uom', string='Unit of Measure')
     factor = fields.Float('Factor')
     product_id = fields.Many2one('product.template', string='Reference Product')
-    # product_tpl_id = fields.Many2one('product.template', string='Reference Product')

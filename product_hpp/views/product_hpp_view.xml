@@ -42,13 +42,27 @@
                             <field name="ingredient_ids">
                                 <tree string="Ingredients" editable="bottom">
                                     <field name="product_id"/>
+                                    <field name="name"/>
                                     <field name="qty"/>
                                     <field name="uom_id"/>
                                     <field name="cost"/>
                                 </tree>
+                                <form string="Ingredients">
+                                  <group>
+                                    <field name="product_id"/>
+                                    <field name="name"/>
+                                    <field name="qty"/>
+                                    </group>
+                                    <group>
+                                    <field name="uom_id"/>
+                                    <field name="cost"/>
+                                  </group>
+                                    
+                                </form>
                             </field>
+                        
                         </page>
-
+                      
                     </notebook>
                 </sheet>
             </form>
