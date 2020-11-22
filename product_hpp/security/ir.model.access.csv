@@ -1,7 +1,7 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_hpp_product_recipe_user,product.hpp.product.product_recipe.user,product_hpp.model_product_recipe,product_hpp.group_hpp_manager,1,1,1,1
-access_hpp_product_recipe_manager,product.hpp.product.product_recipe.manager,product_hpp.model_product_recipe,base.group_system,1,1,1,1
-access_hpp_product_ingredient_user,product.hpp.product.ingredient.user,product_hpp.model_product_ingredient,product_hpp.group_hpp_manager,1,1,1,1
-access_hpp_product_ingredient_manager,product.hpp.product.ingredient.manager,product_hpp.model_product_ingredient,base.group_system,1,1,1,1
-access_hpp_product_conversion_user,product.hpp.product.conversion.user,product_hpp.model_product_conversion,product_hpp.group_hpp_manager,1,1,1,1
-access_hpp_product_conversion_manager,product.hpp.product.conversion.manager,product_hpp.model_product_conversion,base.group_system,1,1,1,1
+access_hpp_product_hpp_user,product.hpp.user,product_hpp.model_product_hpp,product_hpp.group_hpp_manager,1,1,1,1
+access_hpp_product_hpp_manager,product.hpp.manager,product_hpp.model_product_hpp,base.group_system,1,1,1,1
+access_hpp_product_hpp_line_user,product.hpp.line.user,product_hpp.model_product_hpp_line,product_hpp.group_hpp_manager,1,1,1,1
+access_hpp_product_hpp_line_manager,product.hpp.line.manager,product_hpp.model_product_hpp_line,base.group_system,1,1,1,1
+access_hpp_goods_consume_line_user,goods.consume.line.user,product_hpp.model_goods_consume_line,product_hpp.group_hpp_manager,1,1,1,1
+access_hpp_goods_consume_line_manager,goods.consume.line.manager,product_hpp.model_goods_consume_line,base.group_system,1,1,1,1

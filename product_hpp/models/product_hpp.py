@@ -1,83 +1,118 @@
 from odoo import api, fields, models
-from odoo.exceptions import UserError, ValidationError
-
+# from odoo.exceptions import UserError, ValidationError
 import logging
+import xlrd
+import tempfile
+import binascii
+
 _logger = logging.getLogger(__name__)
 
 
-class ProductRecipe(models.Model):
-    _name = 'product.recipe'
-
-    ingredient_ids = fields.One2many('product.ingredient', 'recipe_ref', string='Product Ingredients')
-    hpp = fields.Float(string='HPP(%)', compute='_compute_hpp')
-    hpp_cost = fields.Float(string='HPP', compute='_compute_hpp')
-    product_id = fields.Many2one('product.template', string='Related Product', domain=[('sale_ok', '=', True)])
-    name = fields.Char('Name')
-    recipe_type = fields.Selection([('food', 'Food'), ('beverage', 'Beverage')], string='Recipe Type', default='food')
-
-    sale_price = fields.Float(string='Sale Price')
+class Product(models.Model):
+    _inherit = 'product.template'
+    name_code = fields.Char('Name Code', compute='_get_name_code', store=True)
 
     @api.one
-    @api.depends('ingredient_ids', 'ingredient_ids.cost', 'sale_price')
-    def _compute_hpp(self):
-        for r in self:
-            r.hpp_cost = sum([r.cost for r in r.ingredient_ids])
-            r.hpp = r.sale_price and r.hpp_cost/r.sale_price*100.0 or 0.0
-
-    @api.onchange('product_id')
-    def _onchange_product_id(self):
-        self.name = self.product_id.name and self.product_id.name + ' Recipe'
+    @api.depends('name')
+    def _get_name_code(self):
+        self.name_code = self.name and ''.join(self.name.strip().split()).lower()
 
 
-class ProductTemplate(models.Model):
-    _inherit = 'product.template'
+class ProductHpp(models.Model):
+    _name = 'product.hpp'
 
-    conversion_ids = fields.One2many('product.conversion', 'product_id', string='Conversion Table')
-    prod_type = fields.Selection([('food', 'Food'), ('beverage', 'Beverage')], string='Product Type',
-                                 help='Select to what division this product belogs to', default='food')
+    @api.model
+    def _default_currency(self):
+        return self.env.user.company_id.currency_id
 
+    currency_id = fields.Many2one('res.currency', string='Currency', required=True, readonly=True,
+                                  default=_default_currency, track_visibility='always')
 
-class ProductIngredient(models.Model):
-    _name = 'product.ingredient'
+    date_from = fields.Date('Date From')
+    date_to = fields.Date('Date To')
+    name = fields.Char('Name')
+    sale_data = fields.Binary('Sale Data')
+    sale_amount = fields.Monetary(string='Total Sale', compute='compute_sale_amt')
+    sale_amount_discounted = fields.Monetary(string='Sale Discounted', help='Total sale after discount')
+    sale_discount = fields.Monetary(string='Total Discount', help='Total discount amount')
+    hpp_line_ids = fields.One2many('product.hpp.line', 'hpp_id', string='HPP Item')
+    goods_consumed_ids = fields.One2many('goods.consume.line', 'hpp_id', string='HPP Item')
+    state = fields.Selection([('draft', 'Draft'), ('done', 'Done')])
 
-    recipe_ref = fields.Many2one('product.recipe', string='Reference Recipe')
-    product_id = fields.Many2one('product.template', string='Product Ingredient', domain=[('purchase_ok', '=', True)], required=True)
-    qty = fields.Float('Quantity', required=True)
-    uom_id = fields.Many2one('uom.uom', string='Unit of Measure', required=True)
-    cost = fields.Float('Cost')
-    name = fields.Char('Description')
+    @api.one
+    @api.depends('hpp_line_ids')
+    def compute_sale_amt(self):
+        amt = 0.0
+        for line in self.hpp_line_ids:
+            recipe = self.env['product.recipe'].search([('product_id', '=', line.product_id.id)])
+            if recipe:
+                amt += recipe.sale_price*line.qty
+        self.sale_amount = amt
 
-    @api.onchange('product_id', 'qty', 'uom_id')
-    def _onchage_product_id(self):
-        to_disc = ''
-        if self.product_id:
-            product_lang = self.product_id.with_context(
-                lang=self.env.user.partner_id.lang,
-                partner_id=self.env.user.partner_id.id,
-            )
-            to_disc = product_lang.display_name
-        if self.qty:
-            to_disc += ' - ' + str(self.qty)
-        if self.uom_id:
-            to_disc += ' - ' + self.uom_id.name
-        self.name = to_disc
+    @api.one
+    def read_sale_data(self):
+        if self.sale_data:
+            sale_amt = 0.0
+            fp = tempfile.NamedTemporaryFile(suffix=".xls")
+            fp.write(binascii.a2b_base64(self.sale_data))   # self.xls_file is your binary field
+            fp.seek(0)
+            workbook = xlrd.open_workbook(fp.name)
+            sheet = workbook.sheet_by_index(0)
 
-    @api.onchange('qty', 'product_id', 'uom_id')
-    def _onchange_qty(self):
-        uom_from = self.product_id and self.product_id.uom_id
-        uom_to = self.uom_id
-        if self.product_id and self.qty and uom_to and uom_from:
-            factor_from = self.env['product.conversion'].search([('product_id', '=', self.product_id.id), ('uom_id', '=', self.uom_id.id)], limit=1)
-            factor_to = self.env['product.conversion'].search([('product_id', '=', self.product_id.id), ('uom_id', '=', self.product_id.uom_id.id)], limit=1)
-            if uom_from.category_id == uom_to.category_id:
-                self.cost = uom_from._compute_price(self.product_id.standard_price*self.qty, uom_to)
+            for row_no in range(1, sheet.nrows):
+                row = list((map(lambda row: isinstance(row.value, str) and row.value.encode('utf-8') or str(row.value), sheet.row(row_no))))
+                # prodname = str(row[0])
+                prodname = row[0].decode('utf-8')
+                prodname = ''.join(str(prodname).strip().split()).lower()
+                prod_id = self.env['product.product'].search([('name_code', '=', prodname)], limit=1)
+                recipe = self.env['product.recipe'].search([('product_id', '=', prod_id.id)])
+                if prod_id:
+                    self.env['product.hpp.line'].create({
+                        'product_id': prod_id.id,
+                        'qty': float(row[1]),
+                        'hpp_id': self.id
+                        })
+                    sale_amt += recipe.sale_price*float(row[1])
+            self.sale_amount = sale_amt
+
+    @api.one
+    def generate_consume_line(self):
+        cols = {}
+        for menu in self.hpp_line_ids:
+            product = menu.product_id
+            recipe = self.env['product.recipe'].search([('product_id', '=', product.id)])
+            if not recipe:
+                continue
+            for ingre in recipe.ingredient_ids:
+                qty = ingre.get_converted_uom()
+                qty = isinstance(qty, list) and qty[0] or qty
+                qty = qty*menu.qty
+                if ingre.product_id.id in cols:
+                    qty += cols.get(ingre.product_id.id)
+                cols.update({ingre.product_id.id: qty})
+        for item in cols:
+            goods_obj = self.env['goods.consume.line']
+            # check if the product existed
+            line_id = goods_obj.search([('product_id', '=', item), ('hpp_id', '=', self.id)])
+            if line_id:
+                line_id.update({'qty': cols.get(item)})
             else:
-                self.cost = factor_from and factor_to and 1.0*factor_to.factor/factor_from.factor*self.product_id.standard_price*self.qty or 0.0
+                goods_obj.create({'product_id': item, 'qty': cols.get(item), 'hpp_id': self.id})
+        return True
 
 
-class UomConvertion(models.Model):
-    _name = 'product.conversion'
+class ProductHppLine(models.Model):
+    _name = 'product.hpp.line'
 
-    uom_id = fields.Many2one('uom.uom', string='Unit of Measure')
-    factor = fields.Float('Factor')
-    product_id = fields.Many2one('product.template', string='Reference Product')
+    product_id = fields.Many2one('product.product')
+    qty = fields.Integer('Qty')
+    hpp_id = fields.Many2one('product.hpp')
+
+
+class GoodsConsumeLine(models.Model):
+    _name = 'goods.consume.line'
+
+    product_id = fields.Many2one('product.product')
+    qty = fields.Float('Qty')
+    uom_id = fields.Many2one('uom.uom', related='product_id.uom_id')
+    hpp_id = fields.Many2one('product.hpp')

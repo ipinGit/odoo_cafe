@@ -1,5 +1,5 @@
 {
-    'name': 'Product HPP Details',
+    'name': 'Product HPP and Recipe',
     'version': '12.0',
     'category': 'Product',
     'sequence': 99,
@@ -7,8 +7,8 @@
     'description': "",
     'depends': ['product'],
     'data': [
-        'data/hpp_group.xml',
-        'views/product_hpp_view.xml',
+        'data/recipe_group.xml',
+        'views/product_recipe_view.xml',
         'security/ir.model.access.csv'
     ],
     'demo': [
