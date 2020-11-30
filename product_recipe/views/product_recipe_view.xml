@@ -32,8 +32,8 @@
                             <field name="recipe_type"/>
                         </group>
                         <group>
-                            <field name="sale_price"/>
-                            <field name="hpp_cost"/>
+                            <field name="sale_price" widget='monetary'/>
+                            <field name="hpp_cost" widget='monetary'/>
                             <field name="hpp"/>
                         </group>
                     </group>

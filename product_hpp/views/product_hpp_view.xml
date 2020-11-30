@@ -8,6 +8,7 @@
         <field name="arch" type="xml">
             <field name="barcode" position="after">
               <field name="name_code"/>
+              <field name="prod_type"/>
             </field>
         </field>
     </record>
@@ -32,9 +33,9 @@
                         </group>
                         <group>
                             <field name="sale_data"/>
-                            <field name="sale_amount"/>
-                            <field name="sale_discount"/>
-                            <field name="sale_amount_discounted"/>
+                            <field name="sale_amount" widget='monetary'/>
+                            <field name="sale_discount" widget='monetary'/>
+                            <field name="sale_amount_discounted" widget='monetary'/>
                         </group>
                     </group>
                     <notebook>
@@ -60,17 +61,37 @@
                                     <field name="product_id"/>
                                     <field name="qty"/>
                                     <field name="uom_id"/>
+                                    <field name="cost"/>
+                                    <field name="prod_type"/>
                                 </tree>
                                 <form string="Hpp Lines">
                                   <group>
                                     <field name="product_id"/>
-                                  </group>
-                                  <group>
                                     <field name="qty"/>
                                     <field name="uom_id"/>
                                   </group>
+                                  <group>
+                                    <field name="cost"/>
+                                    <field name="prod_type"/>
+
+                                  </group>
                                 </form>
                             </field>
+                        </page>
+                        <page string="Sale Data">
+                          <group>
+                            <field name="sale_bev_amount"/>
+                            <field name="sale_bev_discount"/>
+                            <field name="sale_bev_discounted"/>
+                          </group>
+                          <group>
+                            <field name="sale_food_amount"/>
+                            <field name="sale_food_discount"/>
+                            <field name="sale_food_discounted"/>
+                          </group>
+                        </page>
+                        <page string="Summary">
+                          
                         </page>
                     </notebook>
                 </sheet>

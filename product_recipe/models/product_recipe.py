@@ -8,9 +8,16 @@ _logger = logging.getLogger(__name__)
 class ProductRecipe(models.Model):
     _name = 'product.recipe'
 
+    @api.model
+    def _default_currency(self):
+        return self.env.user.company_id.currency_id
+
+    currency_id = fields.Many2one('res.currency', string='Currency', required=True, readonly=True,
+                                  default=_default_currency, track_visibility='always')
+
     ingredient_ids = fields.One2many('product.ingredient', 'recipe_ref', string='Product Ingredients')
     hpp = fields.Float(string='HPP(%)', compute='_compute_hpp')
-    hpp_cost = fields.Float(string='HPP', compute='_compute_hpp')
+    hpp_cost = fields.Monetary(string='HPP', compute='_compute_hpp')
     product_id = fields.Many2one('product.product', string='Related Product', domain=[('sale_ok', '=', True)])
     name = fields.Char('Name')
     recipe_type = fields.Selection([('food', 'Food'), ('beverage', 'Beverage')], string='Recipe Type', default='food')
@@ -40,11 +47,18 @@ class ProductTemplate(models.Model):
 class ProductIngredient(models.Model):
     _name = 'product.ingredient'
 
+    @api.model
+    def _default_currency(self):
+        return self.env.user.company_id.currency_id
+
+    currency_id = fields.Many2one('res.currency', string='Currency', required=True, readonly=True,
+                                  default=_default_currency, track_visibility='always')
+
     recipe_ref = fields.Many2one('product.recipe', string='Reference Recipe')
     product_id = fields.Many2one('product.product', string='Product Ingredient', domain=[('purchase_ok', '=', True)], required=True)
     qty = fields.Float('Quantity', required=True)
     uom_id = fields.Many2one('uom.uom', string='Unit of Measure', required=True)
-    cost = fields.Float('Cost')
+    cost = fields.Monetary('Cost')
     name = fields.Char('Description')
 
     @api.onchange('product_id', 'qty', 'uom_id')

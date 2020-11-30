@@ -33,21 +33,43 @@ class ProductHpp(models.Model):
     name = fields.Char('Name')
     sale_data = fields.Binary('Sale Data')
     sale_amount = fields.Monetary(string='Total Sale', compute='compute_sale_amt')
-    sale_amount_discounted = fields.Monetary(string='Sale Discounted', help='Total sale after discount')
     sale_discount = fields.Monetary(string='Total Discount', help='Total discount amount')
+    sale_amount_discounted = fields.Monetary(string='Sale Discounted', help='Total sale after discount', compute='compute_salediscount')
     hpp_line_ids = fields.One2many('product.hpp.line', 'hpp_id', string='HPP Item')
     goods_consumed_ids = fields.One2many('goods.consume.line', 'hpp_id', string='HPP Item')
     state = fields.Selection([('draft', 'Draft'), ('done', 'Done')])
+
+    sale_bev_amount = fields.Monetary(string='Sale Baverages', compute='compute_sale_amt')
+    sale_bev_discount = fields.Monetary(string='Sale Baverages Discount')
+    sale_bev_discounted = fields.Monetary(string='Sale Baverages Discounted', compute='compute_salediscount')
+
+    sale_food_amount = fields.Monetary(string='Sale Food', compute='compute_sale_amt')
+    sale_food_discount = fields.Monetary(string='Sale Food Discount')
+    sale_food_discounted = fields.Monetary(string='Sale Bar Discounted', compute='compute_salediscount')
 
     @api.one
     @api.depends('hpp_line_ids')
     def compute_sale_amt(self):
         amt = 0.0
+        amt_food = 0.0
         for line in self.hpp_line_ids:
             recipe = self.env['product.recipe'].search([('product_id', '=', line.product_id.id)])
             if recipe:
                 amt += recipe.sale_price*line.qty
+                if recipe.product_id.prod_type == 'food':
+                    amt_food += recipe.sale_price*line.qty
+
         self.sale_amount = amt
+        self.sale_bev_amount = amt - amt_food
+        self.sale_food_amount = amt_food
+
+    @api.one
+    @api.depends('sale_amount', 'sale_bev_discount', 'sale_food_discount')
+    def compute_salediscount(self):
+        self.sale_bev_discounted = self.sale_bev_amount - self.sale_bev_discount
+        self.sale_food_discounted = self.sale_food_amount - self.sale_food_discount
+        self.sale_discount = self.sale_bev_discount + self.sale_food_discount
+        self.sale_amount_discounted = self.sale_amount - self.sale_discount
 
     @api.one
     def read_sale_data(self):
@@ -88,16 +110,16 @@ class ProductHpp(models.Model):
                 qty = isinstance(qty, list) and qty[0] or qty
                 qty = qty*menu.qty
                 if ingre.product_id.id in cols:
-                    qty += cols.get(ingre.product_id.id)
-                cols.update({ingre.product_id.id: qty})
+                    qty += cols.get(ingre.product_id.id)[0]
+                cols.update({ingre.product_id.id: [qty, qty*ingre.product_id.standard_price]})
         for item in cols:
             goods_obj = self.env['goods.consume.line']
             # check if the product existed
             line_id = goods_obj.search([('product_id', '=', item), ('hpp_id', '=', self.id)])
             if line_id:
-                line_id.update({'qty': cols.get(item)})
+                line_id.update({'qty': cols.get(item)[0], 'cost': cols.get(item)[1]})
             else:
-                goods_obj.create({'product_id': item, 'qty': cols.get(item), 'hpp_id': self.id})
+                goods_obj.create({'product_id': item, 'qty': cols.get(item)[0], 'cost': cols.get(item)[1], 'hpp_id': self.id})
         return True
 
 
@@ -112,7 +134,16 @@ class ProductHppLine(models.Model):
 class GoodsConsumeLine(models.Model):
     _name = 'goods.consume.line'
 
+    @api.model
+    def _default_currency(self):
+        return self.env.user.company_id.currency_id
+
+    currency_id = fields.Many2one('res.currency', string='Currency', required=True, readonly=True,
+                                  default=_default_currency, track_visibility='always')
+
     product_id = fields.Many2one('product.product')
     qty = fields.Float('Qty')
     uom_id = fields.Many2one('uom.uom', related='product_id.uom_id')
     hpp_id = fields.Many2one('product.hpp')
+    cost = fields.Monetary('Cost')
+    prod_type = fields.Selection('Product Type', related='product_id.prod_type')
