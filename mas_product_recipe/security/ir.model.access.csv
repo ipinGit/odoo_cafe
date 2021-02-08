@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_recipe_product_recipe_user,product.recipe.product.product_recipe.user,mas_product_recipe.model_product_recipe,mas_product_recipe.group_recipe_manager,1,1,1,1
+access_recipe_product_recipe_manager,product.recipe.product.product_recipe.manager,mas_product_recipe.model_product_recipe,base.group_system,1,1,1,1
+access_recipe_product_ingredient_user,product.recipe.product.ingredient.user,mas_product_recipe.model_product_ingredient,mas_product_recipe.group_recipe_manager,1,1,1,1
+access_recipe_product_ingredient_manager,product.recipe.product.ingredient.manager,mas_product_recipe.model_product_ingredient,base.group_system,1,1,1,1
+access_recipe_product_conversion_user,product.recipe.product.conversion.user,mas_product_recipe.model_product_conversion,mas_product_recipe.group_recipe_manager,1,1,1,1
+access_recipe_product_conversion_manager,product.recipe.product.conversion.manager,mas_product_recipe.model_product_conversion,base.group_system,1,1,1,1

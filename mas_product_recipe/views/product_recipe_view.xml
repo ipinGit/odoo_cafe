@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<odoo>
+    <record id="view_product_recipe" model="ir.ui.view">
+        <field name="name">product.recipe.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view" />
+        <field eval="999" name="priority"/>
+        <field name="arch" type="xml">
+            <page name="variants" position="after">
+                <page string="Conversion Table" name="product_uom_convesoion_table" attrs="{'invisible':[('sale_ok','=', True)]}">
+                    <field name="conversion_ids">
+                        <tree string="Conversion Table" editable="bottom">
+                            <field name="uom_id"/>
+                            <field name="factor"/>
+                        </tree>
+                    </field>
+                 </page>
+            </page>
+        </field>
+    </record>
+
+    <record id="view_product_recipe_form" model="ir.ui.view">
+        <field name="name">product.recipe.form.view</field>
+        <field name="model">product.recipe</field>
+        <field name="arch" type="xml">
+            <form string="Product Recipe">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="product_id"/>
+                            <field name="recipe_type"/>
+                        </group>
+                        <group>
+                            <field name="sale_price" widget='monetary'/>
+                            <field name="hpp_cost" widget='monetary'/>
+                            <field name="hpp"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Ingredients" name="product_ingredients">
+                            <field name="ingredient_ids">
+                                <tree string="Ingredients" editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="name"/>
+                                    <field name="qty"/>
+                                    <field name="uom_id"/>
+                                    <field name="cost"/>
+                                </tree>
+                                <form string="Ingredients">
+                                  <group>
+                                    <field name="product_id"/>
+                                    <field name="name"/>
+                                    <field name="qty"/>
+                                    </group>
+                                    <group>
+                                    <field name="uom_id"/>
+                                    <field name="cost"/>
+                                  </group>
+                                    
+                                </form>
+                            </field>
+                        
+                        </page>
+                      
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="view_product_recipe_tree" model="ir.ui.view">
+        <field name="name">product.recipe.tree</field>
+        <field name="model">product.recipe</field>
+        <field name="arch" type="xml">
+            <tree string="Trip">
+               <field name="name"/>
+               <field name="hpp_cost"/>
+               <field name="hpp"/>
+           </tree>
+        </field>
+    </record>
+
+    <record id="view_product_recipe_search" model="ir.ui.view">
+        <field name="name">product.recipe.search</field>
+        <field name="model">product.recipe</field>
+        <field name="arch" type="xml">
+            <search string="Search Recipe">
+               <field name="recipe_type"/>
+               <group expand="0" name="group_by" string="Group By">
+                   <filter name="recipe_type" string="Recipe Type" domain="[]" context="{'group_by' : 'recipe_type'}" />
+               </group>
+           </search>
+        </field>
+    </record>
+
+    <record id="action_recipe_open" model="ir.actions.act_window">
+         <field name="name">Product Recipe</field>
+         <field name="type">ir.actions.act_window</field>
+         <field name="res_model">product.recipe</field>
+         <field name="view_mode">tree,form</field>
+         <field name="view_type">form</field>
+         <field name="view_id" ref="mas_product_recipe.view_product_recipe_tree"/>
+         <field name="search_view_id" ref="mas_product_recipe.view_product_recipe_search"/>
+         <!-- <field name="context">{"search_default_filter_to_sell":1, "sale_multi_pricelist_product_template": 1}</field> -->
+         <field name="help" type="html">
+             <p class="o_view_nocontent_smiling_face">
+                 Create New Recipe
+             </p><p>
+                 You create recipe for every salable product 
+             </p>
+         </field>
+     </record>
+    
+    <menuitem id="menu_recipe_open"
+              name="Product Recipe"
+              action="action_recipe_open"
+              parent="mail.menu_root_discuss"
+              sequence="20"
+              groups="mas_product_recipe.group_recipe_manager"/>
+
+    <record id="product_normal_action_recipe" model="ir.actions.act_window">
+        <field name="name">Products</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.template</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <!-- <field name="context">{"search_default_filter_to_purchase":1, "purchase_product_template": 1}</field> -->
+        <field name="search_view_id" ref="product.product_template_search_view"/>
+        <field name="view_id" eval="False"/> <!-- Force empty -->
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Create a new product
+          </p><p>
+            You must define a product for everything you purchase,
+            whether it's a physical product, a consumable or services.
+          </p>
+        </field>
+    </record>
+
+      <!-- Product menu-->
+      <menuitem name="Products"
+                id="menu_product_recipe"
+                action="product_normal_action_recipe"
+                parent="mail.menu_root_discuss"
+                sequence="10"
+                groups="mas_product_recipe.group_recipe_manager"/>/>
+
+
+
+</odoo>

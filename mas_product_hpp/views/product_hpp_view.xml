@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<odoo>
+  <record id="view_product_hpp_namecode" model="ir.ui.view">
+        <field name="name">product.recipe.namecode.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view" />
+        <field eval="999" name="priority"/>
+        <field name="arch" type="xml">
+            <field name="barcode" position="after">
+              <field name="name_code"/>
+              <field name="prod_type"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_product_hpp_form" model="ir.ui.view">
+        <field name="name">product.hpp.form.view</field>
+        <field name="model">product.hpp</field>
+        <field name="arch" type="xml">
+            <form string="Product Hpp">
+              <header>
+                    <button name="read_sale_data" type="object" string="Read Excel File" class="oe_highlight"/>
+                    <button name="generate_consume_line" type="object" string="Generate Consume Line" class="oe_highlight"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+
+                        <group>
+                            <field name="name"/>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                        </group>
+                        <group>
+                            <field name="sale_data"/>
+                            <field name="sale_amount" widget='monetary'/>
+                            <field name="sale_discount" widget='monetary'/>
+                            <field name="sale_amount_discounted" widget='monetary'/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="HPP Line" name="hpp_line_ids">
+                            <field name="hpp_line_ids">
+                                <tree string="HPP Lines" editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="qty"/>
+                                </tree>
+                                <form string="Hpp Lines">
+                                  <group>
+                                    <field name="product_id"/>
+                                  </group>
+                                  <group>
+                                    <field name="qty"/>
+                                  </group>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Consumed Goods Lines" name="">
+                            <field name="goods_consumed_ids">
+                                <tree string="Consumed Goods Lines" editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="qty"/>
+                                    <field name="uom_id"/>
+                                    <field name="cost"/>
+                                    <field name="prod_type"/>
+                                </tree>
+                                <form string="Hpp Lines">
+                                  <group>
+                                    <field name="product_id"/>
+                                    <field name="qty"/>
+                                    <field name="uom_id"/>
+                                  </group>
+                                  <group>
+                                    <field name="cost"/>
+                                    <field name="prod_type"/>
+
+                                  </group>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Sale Data">
+                          <group>
+                            <field name="sale_bev_amount"/>
+                            <field name="sale_bev_discount"/>
+                            <field name="sale_bev_discounted"/>
+                          </group>
+                          <group>
+                            <field name="sale_food_amount"/>
+                            <field name="sale_food_discount"/>
+                            <field name="sale_food_discounted"/>
+                          </group>
+                        </page>
+                        <page string="Summary">
+                          
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="view_product_hpp_tree" model="ir.ui.view">
+        <field name="name">product.hpp.tree</field>
+        <field name="model">product.hpp</field>
+        <field name="arch" type="xml">
+            <tree string="Trip">
+               <field name="name"/>
+           </tree>
+        </field>
+    </record>
+
+    <record id="view_product_hpp_search" model="ir.ui.view">
+        <field name="name">product.hpp.search</field>
+        <field name="model">product.hpp</field>
+        <field name="arch" type="xml">
+            <search string="Search Hpp">
+               
+           </search>
+        </field>
+    </record>
+
+    <record id="action_hpp_open" model="ir.actions.act_window">
+         <field name="name">Product Hpp</field>
+         <field name="type">ir.actions.act_window</field>
+         <field name="res_model">product.hpp</field>
+         <field name="view_mode">tree,form</field>
+         <field name="view_type">form</field>
+         <field name="view_id" ref="mas_product_hpp.view_product_hpp_tree"/>
+         <field name="search_view_id" ref="mas_product_hpp.view_product_hpp_search"/>
+         <!-- <field name="context">{"search_default_filter_to_sell":1, "sale_multi_pricelist_product_template": 1}</field> -->
+         <field name="help" type="html">
+             <p class="o_view_nocontent_smiling_face">
+                 Create New Hpp
+             </p><p>
+                 You create hpp for selected date range
+             </p>
+         </field>
+     </record>
+    
+    <menuitem id="menu_hpp_open"
+              name="Product Hpp"
+              action="action_hpp_open"
+              parent="mail.menu_root_discuss"
+              sequence="30"
+              groups="mas_product_hpp.group_hpp_manager"/>
+
+
+</odoo>

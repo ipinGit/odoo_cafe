@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+	<record id="mas_act_hr_employee_hr_mycontract" model="ir.actions.act_window">
+            <field name="name">My Contract</field>
+            <field name="res_model">hr.contract</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('user_id','=', uid)]</field>
+            <field name="context">{
+                
+            }</field>
+    </record>
+
+	<record id="mas_hr_employee_custom_form" model="ir.ui.view">
+		<field name="name">mas.hr.employee.custom.form</field>
+		<field name="model">hr.employee</field>
+		<field name="inherit_id" ref="hr.view_employee_form"/>
+		<field name="arch" type="xml">
+			<data>
+				<xpath expr="//button[@name='toggle_active']" position="before">
+                    <field name="show_for_self" invisible="1"/>
+                    <button name="%(mas_act_hr_employee_hr_mycontract)d"
+                        class="oe_stat_button"
+                        icon="fa-book"
+                        type="action"
+                        attrs="{'invisible':[('show_for_self', '=', False)]}">
+                        <field name="contracts_count2" widget="statinfo" string="My Contracts"/>
+                    </button>
+                </xpath>
+			</data>
+		</field>
+    </record>
+
+    <record id="mas_hr_contract_custom_form" model="ir.ui.view">
+        <field name="name">mas.hr.contract.hide.toggle.form</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//button[@name='toggle_active']" position="attributes">
+                    <attribute name="groups">hr.group_hr_manager</attribute>
+                </xpath>
+                <xpath expr="//page[@name='information']" position="after">
+                    <page string="Contracts Statements" name="statement">
+                        <group name="container">
+                            <group string="Statements">
+                                <field name="contract_statement"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </data>
+
+        </field>
+    </record>
+
+</odoo>

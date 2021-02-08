@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="mas_hr.group_hr_contract_employyee" model="res.groups">
+            <field name="name">Employee</field>
+            <field name="category_id" ref="base.module_category_hr_contract"/>
+        </record>
+    </data>
+</odoo>

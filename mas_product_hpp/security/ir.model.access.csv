@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hpp_product_hpp_user,product.hpp.user,mas_product_hpp.model_product_hpp,mas_product_hpp.group_hpp_manager,1,1,1,1
+access_hpp_product_hpp_manager,product.hpp.manager,mas_product_hpp.model_product_hpp,base.group_system,1,1,1,1
+access_hpp_product_hpp_line_user,product.hpp.line.user,mas_product_hpp.model_product_hpp_line,mas_product_hpp.group_hpp_manager,1,1,1,1
+access_hpp_product_hpp_line_manager,product.hpp.line.manager,mas_product_hpp.model_product_hpp_line,base.group_system,1,1,1,1
+access_hpp_goods_consume_line_user,goods.consume.line.user,mas_product_hpp.model_goods_consume_line,mas_product_hpp.group_hpp_manager,1,1,1,1
+access_hpp_goods_consume_line_manager,goods.consume.line.manager,mas_product_hpp.model_goods_consume_line,base.group_system,1,1,1,1
