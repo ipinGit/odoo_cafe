@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+		<record id="sequence_hr_contract_id" model="ir.sequence">
+            <field name="name">Contract Numbering Sequence</field>
+            <field name="code">contract.numbering.sequence</field>
+            <field name="prefix">SKK/</field>
+            <field name="suffix">/%(month)s/%(year)s</field>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="use_date_range"/>
+            <field eval="False" name="company_id"/>
+            <field name="padding">4</field>
+        </record>
+        
+        <record id="mas_contract_generic" model="hr.contract.type">
+            <field name="name">Generic Employee</field>
+            <field name="sequence">1</field>
+            <field name="statement_body"> <![CDATA[
+<p style="text-align: center; "><b>Pasal 1</b></p>
+<p style="text-align: center; "><b>PENEMPATAN KERJA DAN WAKTU</b></p>
+<ol>
+   <li>
+      <p style="text-align: justify;"><b>PIHAK KEDUA</b> menempatkan PIHAK PERTAMA untuk berkerja di <b>{self.company_id.name} {self.company_id.tagline}</b>&nbsp;<b> </b> sebagai: <b>{self.job_id.name}</b></p>
+   </li>
+   <li>
+      <p style="text-align: justify;">Kontrak kerja ini berlaku mulai <b>{self.date_start}</b> sampai dengan <b>{self.date_end}</b></p>
+   </li>
+   <li>
+      <p style="text-align: justify;">Apabila masa kontrak telah selesai sesuai dengan tanggal yang disebutkan pada ayat 2, maka hubungan kerja berakhir tanpa ada kewajiban <b>PIHAK KEDUA</b>&nbsp;memberikan uang pesangon, uang jasa, ataupun uang ganti kerugian lainnya kepada <b>PIHAK KEDUA. </b>Apabila diperlukan, satu bulan sebelumnya kontrak dapat diperpanjang sesuai dengan tingkat kebutuhan dan ditentukan kemudian.</p>
+   </li>
+   <li>
+      <p style="text-align: justify;"><b>PIHAK PERTAMA </b>wajib menjalani masa training yang secepat-cepatnya berlangsung selama dua minggu sejak pertama kali bekerja. <b>PIHAK PERTAMA </b>berhak menerima pengawasan dan arahan selama masa training oleh perwakilan yang ditunjuk oleh <b>PIHAK KEDUA. </b>Ayat ini berlaku jika kontrak ini bukan merupakan kontrak perpanjangan</p>
+   </li>
+   <li>
+      <p style="text-align: justify;">Selama tiga bulan pertama bekerja akan dianggap sebagai masa <i>probation</i> yang menentukan kelayakan <b>PIHAK PERTAMA </b>untuk melanjutkan kontrak kerja. <b>PIHAK KEDUA </b>berhak memutuskan hubungan kerja di bulan ke-empat jika selama masa <i>probation</i> <b>PIHAK PERTAMA </b>tidak memenuhi standard kualitas kerja yang ditentukan oleh <b>PIHAK KEDUA.&nbsp;</b></p>
+   </li>
+   <li>
+      <p style="text-align: justify;"><b>PIHAK PERTAMA </b>bersedia bekerja di lokasi kerja dengan durasi kerja 8 (delapan) jam kerja dalam sehari dengan ketentuan sebagai berikut:</p>
+   </li>
+   <li style="list-style: none;">
+      <ul class="">
+         <li>
+            <p style="text-align: justify;">Waktu kerja <i>shift</i> pagi dimulai dari jam 08.30 sampai dengan 16.30 WIB, <i>shift</i>&nbsp;sore dimulai dari jam 16.00 hingga jam 00.00 WIB, dan <i>shift middle</i>&nbsp;dimulai jam 14.00 hingga 22.00</p>
+         </li>
+         <li>
+            <p style="text-align: justify;">Waktu <i>shift</i>&nbsp;kerja bisa berubah jika ada hal-hal yang tidak terduga semisal peraturan pemerintah.</p>
+         </li>
+         <li>
+            <p style="text-align: justify;">Dalam satu bulan dapat libur empat kali yang ditentukan oleh <b>PIHAK KEDUA </b>atau perwakilannya<b>.</b></p>
+         </li>
+         <li>
+            <p style="text-align: justify;">Bersedia lembur jika diperlukan.</p>
+         </li>
+         <li>
+            <p style="text-align: justify;">Bersedia menjalankan SOP kerja (<i>terlampir</i>).</p>
+         </li>
+      </ul>
+      <p><br></p>
+   </li>
+</ol>
+<p style="text-align: center; "><b>Pasal 2</b></p>
+<p style="text-align: center; "><b>HAK DAN KEWAJIBAN</b></p>
+<ol>
+   <li>
+      <p style="text-align: left;"><b>PIHAK PERTAMA</b> dan <b>PIHAK KEDUA</b>&nbsp;bersama-sama berkewajiban membina hubungan kerja yang harmonis agar tercipta ketenangan kerja dan ketenangan usaha.</p>
+   </li>
+   <li>
+      <p style="text-align: left;"><b>PIHAK PERTAMA </b>berhak:</p>
+   </li>
+   <li style="list-style: none;">
+      <ul class="">
+         <li>
+            <p style="text-align: left;">menerima upah gaji yang besarnya diatur dalam <b>Pasal 4</b></p>
+         </li>
+         <li>
+            <p style="text-align: left;">Menerima pinjaman 2 (dua) buah seragam kerja dari <b>PIHAK KEDUA</b></p>
+         </li>
+         <li>
+            <p style="text-align: left;">Menerima jaminan kesehatan atas kecelakaan kerja yang terjadi dalam jam kerja.</p>
+         </li>
+      </ul>
+   </li>
+   <li>
+      <p style="text-align: left;"><b>PIHAK PERTAMA</b> berkewajiban</p>
+   </li>
+   <li style="list-style: none;">
+      <ul class="">
+         <li>
+            <p style="text-align: left;">Mengikuti peraturan dan tata tertib perusahaan yang telah ditetapkan oleh <b>PIHAK KEDUA</b>&nbsp;serta melaksanakan dengan sebaik-baiknya.</p>
+         </li>
+         <li>
+            <p style="text-align: left;">Berkenan menjaga rahasia perusahaan serta memegang teguh prinsip-prinsip kerja.</p>
+         </li>
+         <li>
+            <p style="text-align: left;">Menghindari kesalahan yang dapat menyebabkan kerugian perusahaan.</p>
+         </li>
+         <li>
+            <p style="text-align: left;">Diwajibkan melakukan pemberitahuan kepada <b>PIHAK KEDUA</b>&nbsp;apabila hendak tidak masuk kerja dengan melampirkan surat izin atau keterangan sakit dari dokter.</p>
+         </li>
+         <li>
+            <p style="text-align: left;">Mengembalikan 2 (dua) seragam pinjaman kepada <b>PIHAK KEDUA</b> ketika kontrak berakhir.</p>
+         </li>
+      </ul>
+   </li>
+</ol>
+<p><br></p>
+<p style="text-align: center; "><b>Pasal 3</b></p>
+<p style="text-align: center; "><b>SANKSI</b></p>
+<ol class="">
+   <li>
+      <p style="text-align: justify;">Tindakan pelanggaran terhadap peraturan atau tata tertib akan mendapatkan sanksi yang sudah tetapkan oleh perusahaan (<i>terlampir</i>), baik secara lisan atau tertulis.</p>
+   </li>
+   <li>
+      <p style="text-align: justify;">Bersedia mengganti kerugian <i>recruitment</i>&nbsp;jika <b>PIHAK PERTAMA</b>&nbsp;memutuskan hubungan kerja secara sepihak&nbsp; sebelum masa kontrak berakhir. Besar denda ini adalah dua kali gaji pokok.</p>
+   </li>
+</ol>
+<p style="text-align: center; "><b>Pasal 4</b></p>
+<p style="text-align: center; "><b>UPAH GAJI</b></p>
+<p style="text-align: center; "><b><br></b></p>
+<ol>
+   <li>
+      <p><b>PIHAK PERTAMA</b>&nbsp;akan menerima upah gaji per satu bulan yang dibayarkan paling lampat tanggal 5 di bulan selanjutnya.</p>
+   </li>
+   <li>
+      <p>Bentuk gaji berupa:</p>
+   </li>
+   <li style="list-style: none;">
+      <ul class="">
+         <li>
+            <p>Gaji pokok per satu bulan sebesar {self.wage}</p>
+         </li>
+         <li>
+            <p>Gaji tunjangan per satu bulan sebesar {self.wage_extra}</p>
+         </li>
+         <li>
+            <p>Gaji lembur per-jam sebesar {self.wage_overtime}</p>
+         </li>
+         <li>
+            <p>Gaji service sebesar {self.wage_service}</p>
+         </li>
+      </ul>
+      <p><br></p>
+   </li>
+</ol>
+<p style="text-align: center; "><b>Pasal 5</b></p>
+<p style="text-align: center; "><b>PENYELESAIAN PERSELISIHAN</b></p>
+<ol>
+   <li>
+      <p style="text-align: left;">Bila terjadi perselisihan atara kedua belah pihak dalammelakukan perjanjian kerja ini, kedua belah pihak akan menyelesaikan secara musyawarah</p>
+   </li>
+   <li>
+      <p style="text-align: left;">Apabila penyelesaian pada ayat 1 di atas tidak berhasil, maka perselesihan akan diselesaikan oleh Badan Arbitrase Nasional Indonesia (BANI) atau badan hukum yang berwenang lainnya.</p>
+   </li>
+</ol>
+<p><br></p>
+<p style="text-align: center;"><span style="font-weight: bolder;">Pasal 6</span></p>
+<p style="text-align: center;"><b>LAIN-LAIN</b></p>
+<ol>
+   <li>
+      <p style="text-align: left;">Segala hal yang belum diatur dalam surat perjanjian ini akan diatur kemudian.</p>
+   </li>
+   <li>
+      <p style="text-align: left;">Segala perubahan terhadap bagian atau seluruh pasal-pasal dalam surat perjanjian ini hanya dapat dilakukan dengan persetujuan kedua belah pihak.</p>
+   </li>
+   <li>
+      <p style="text-align: left;">Perjanjian ini dibuat bermaterai cukup dan memiliki kekuatan hukum</p>
+   </li>
+</ol>
+<p>Demikian surat kontrak kerja ini dibuat dan telah dibaca dan dimengerti oleh kedua belah pihak tanpa adanya paksaan atau tekanan dari pihak manapun.</p>
+<p><br></p>
+                ]]>
+
+            </field>
+        </record>
+
+    </data>
+</odoo>

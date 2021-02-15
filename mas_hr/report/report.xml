@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- QWeb Reports -->
+        <report
+            id="contract_print"
+            model="hr.contract"
+            string="Contract Print"
+            report_type="qweb-pdf"
+            name="mas_hr.mas_hr_contract"
+            file="mas_hr.mas_hr_contract"
+            attachment="('Conract.pdf')"
+            print_report_name="(object.name)"
+        />
+    </data>
+</odoo>

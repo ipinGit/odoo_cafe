@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="mas_external_layout">
+            <t t-if="not o" t-set="o" t-value="doc"/>
+            <t t-if="not company">
+                <!-- Multicompany -->
+                <t t-if="company_id">
+                    <t t-set="company" t-value="company_id"/>
+                </t>
+                <t t-elif="o and 'company_id' in o">
+                    <t t-set="company" t-value="o.company_id.sudo()"/>
+                </t>
+                <t t-else="else">
+                    <t t-set="company" t-value="res_company"/>
+                </t>
+            </t>
+            <div class="header" style="margin-bottom: 15px;">
+            <div class="row">
+                <table style="width: 100%; border-bottom: 2px solid black; ">
+                    <colgroup>
+                        <col style="width: 20%"/>
+                        <col style="width: 80%"/>
+                    </colgroup>
+                    <tr>
+                        <td><img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-height: 120px;" alt="Logo"/></td>
+                        <td style="text-align: center; font-size: 18px; font-weight:bold; padding-right: 50px;">
+                            <div style="line-height: 1.2;"><span t-field="company.name"/><br/></div>
+                            <div style="line-height: 1.0;"><span t-field="company.tagline"/><br/></div>
+                            <div style="line-height: 1.0;"><span style="font-size: 16px; font-weight: normal;" t-field="company.street"/></div>
+                        </td>
+                    </tr>
+                </table>
+
+                
+            </div>
+            
+        </div>
+
+        <div class="article o_report_layout_standard"  t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
+            <t t-call="web.address_layout"/>
+            <t t-raw="0"/>
+        </div>
+
+        <div class="footer o_standard_footer" style="padding-top:15px">
+            <table style="width:100%; padding-bottom: 30px">
+                <colgroup>
+                    <col style="width:50%"/>
+                    <col style="width:50%"/>
+                </colgroup>
+                <tr>
+                    <td class="text-right" style="border-bottom: 1px solid black"></td>
+                    <td class="text-left" style="border-bottom: 1px solid black;"></td>
+                </tr>
+                <tr>
+                    <td class="text-left"
+                        style="padding-right: 5px; font-size:11px; font-style: italic;">
+                        Printed on &amp;nbsp;<span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M')"/>&amp;nbsp; via &amp;nbsp;<span> <a href="www.epluscofee.com">www.epluscoffee.com</a></span></td>
+                    <td class="text-right" style="padding-left: 5px; font-style: italic; font-size: 11px;">Page &amp;nbsp;<span class="page"/>&amp;nbsp; of &amp;nbsp;<span class="topage"/></td>
+                </tr>
+            </table>
+        </div>
+        </template>
+
+        <template id="mas_hr_contract">
+            <!-- BEGIN COPY HERE -->
+            
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-set="lang" t-value="o.env.user.sudo().lang"/>
+                    <t t-call="mas_hr.mas_external_layout">
+                    <t t-set="o" t-value="o.with_context(lang=lang)" />
+                    <t t-if="company_id">
+                        <t t-set="company" t-value="company_id"/>
+                    </t>
+                    <t t-elif="o and 'company_id' in o">
+                        <t t-set="company" t-value="o.company_id.sudo()"/>
+                    </t>
+                    <t t-else="else">
+                        <t t-set="company" t-value="res_company"/>
+                    </t>
+                    <div class="page" style="padding-left: 40px" >
+                        <!-- <t t-if="company.watermark_img">
+                            <div class="watermark" style="position:absolute;opacity:0.08;font-size:3em;width:100%;text-align:center;z-index:1000; padding-top:300px">
+                                <img t-att-src="image_data_uri(company.watermark_img)"/>
+                                    
+                            </div>
+                        </t> -->
+                        <div style="font-size: 16px; font-weight: bold; width:100%; text-align: center;"><span style="padding-bottom: 1px; border-bottom: 2px solid black;">SURAT KONTRAK KERJA</span></div>
+                        <div style="font-size: 16px; font-weight: bold; width:100%; text-align: center; padding-bottom:15px;">NOMOR: &amp;nbsp;<span t-field="o.name"/></div>
+                        <div style="padding-bottom: 15px;"><span>Yang Bertandatangan di bawah ini</span></div>
+                        <div>(1)</div>
+                        <div style="width: 100%">
+                            <table style="width:100%">
+                                <colgroup>
+                                    <col style="width: 30%"/>
+                                    <col style="width: 5%"/>
+                                    <col style="width: 65%"/>
+                                </colgroup>
+                                    <tr>
+                                        <td class="text-left">Nama</td>
+                                        <td class="text-right">:</td>
+                                        <td class="text-left" style="padding-left: 3px;"><span t-field="o.employee_id and o.employee_id.name"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left">Tempat dan tanggal lahir</td>
+                                        <td class="text-right">:</td>
+                                        <td class="text-left" style="padding-left: 3px;"><span t-field="o.employee_id.place_of_birth"/>, <span t-field="o.employee_id.birthday"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left">Alamat tinggal saat ini</td>
+                                        <td class="text-right">:</td>
+                                        <td class="text-left" style="padding-left: 3px;"><span t-field="o.employee_id.address_id.street"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left">Alamat asal</td>
+                                        <td class="text-right">:</td>
+                                        <td class="text-left" style="padding-left: 3px;"><span t-field="o.employee_id.address_home_id.street"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left">No. Identitas</td>
+                                        <td class="text-right">:</td>
+                                        <td class="text-left" style="padding-left: 3px;"><span t-field="o.employee_id.identification_id"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left">No. Hp</td>
+                                        <td class="text-right">:</td>
+                                        <td class="text-left" style="padding-left: 3px;"><span t-field="o.employee_id.mobile_phone"/></td>
+                                    </tr>
+                            </table>
+                        </div>
+                        <div style="padding-bottom: 15px;padding-top: 15px;"><span>Dalam hal ini bertindak untuk dan atas atas nama perseorangan yang selanjutnya disebut sebagai <b>PIHAK PERTAMA</b>, </span></div>
+
+                        <div>(2)</div>
+                        <div style="width: 100%">
+                            <table style="width:100%">
+                                <colgroup>
+                                    <col style="width: 30%"/>
+                                    <col style="width: 5%"/>
+                                    <col style="width: 65%"/>
+                                </colgroup>
+                                    <tr>
+                                        <td class="text-left">Nama</td>
+                                        <td class="text-right">:</td>
+                                        <td class="text-left" style="padding-left: 3px;"><span t-field="o.hrd_manager and o.hrd_manager.name"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left">Jabatan</td>
+                                        <td class="text-right">:</td>
+                                        <td class="text-left" style="padding-left: 3px;">HRD&amp;nbsp;<span t-field="company.name"/>&amp;nbsp;<span t-field="company.tagline"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left">Alamat</td>
+                                        <td class="text-right">:</td>
+                                        <td class="text-left" style="padding-left: 3px;"><span t-field="o.hrd_manager and o.hrd_manager.street"/></td>
+                                    </tr>
+                            </table>
+                        </div>
+
+                        <div style="padding-bottom: 15px; padding-top: 15px;"><span>Dalam hal ini bertindak untuk dan atas atas nama <b><span t-field="company.name"/> <span t-field="company.tagline"/></b> yang selanjutnya disebut sebagai <b>PIHAK KEDUA</b> </span></div>
+
+                        <div style="padding-bottom: 15px; padding-top: 15px;"><span><b>PIHAK PERTAMA</b> dan <b>PIHAK KEDUA</b> sepakat untuk mengadakan perjanjian kerja dengan ketentuan sebagai berikut</span></div>
+
+                        <div style="width:100%" t-field="o.contract_statement">
+            
+                        </div>
+                        <div style="height: 300px; width: 100%">
+                            <table style="width:100%; height:100%">
+                                <colgroup>
+                                    <col style="width:40%"/>
+                                    <col style="width:20%"/>
+                                    <col style="width:40%"/>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-center">
+                                            <br/>PIHAK KEDUA <br/><br/><br/><br/><br/><br/>
+                                            <span t-field="o.hrd_manager.name"/><br/>
+                                            <span style="text-decoration:overline">HRD Manager</span>
+                                        </td>
+                                        <td></td>
+                                        <td class="text-center">
+                                            Yogyakarta, <span t-field="o.date_signed"/><br/>
+                                            PIHAK PERTAMA <br/><br/><br/><br/><br/><br/>
+                                            <span t-field="o.employee_id.name"/><br/>
+                                            <span style="text-decoration:overline">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;CREW&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</span>
+                                        </td>
+                                    </tr>
+                                    <tr></tr>
+                                </colgroup>
+                            </table>
+                        </div>
+                        
+                    </div>
+
+
+                    </t>
+                </t>
+            </t>
+        <!-- END OF COPY -->
+        </template>
+    </data>
+</odoo>
+    

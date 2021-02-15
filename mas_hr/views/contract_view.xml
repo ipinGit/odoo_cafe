@@ -38,18 +38,46 @@
         <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
         <field name="arch" type="xml">
             <data>
+                <xpath expr="/form/*" position="before">
+                    <header>
+                        <button name="parse_statements" type="object" string="Parse Statements Body" class="oe_highlight"/>
+                    </header>
+                </xpath>
                 <xpath expr="//button[@name='toggle_active']" position="attributes">
                     <attribute name="groups">hr.group_hr_manager</attribute>
                 </xpath>
                 <xpath expr="//page[@name='information']" position="after">
                     <page string="Contracts Statements" name="statement">
-                        <group name="container">
-                            <group string="Statements">
-                                <field name="contract_statement"/>
-                            </group>
+                        
+                        <group string="Statements">
+                            <field name="contract_statement"/>
                         </group>
+                  
                     </page>
                 </xpath>
+                <xpath expr="//field[@name='resource_calendar_id']" position="after">
+                    <field name="hrd_manager"/>
+                    <field name="signed_contract"/>
+                    <field name="date_signed"/>
+                </xpath>
+            </data>
+
+        </field>
+    </record>
+
+
+    <record id="mas_hr_contract_type_form" model="ir.ui.view">
+        <field name="name">mas.hr.contract.type.form</field>
+        <field name="model">hr.contract.type</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_type_view_form"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//form" position="inside">
+                    <group>
+                        <field name="statement_body"/>
+                    </group>
+                </xpath>
+                
             </data>
 
         </field>
