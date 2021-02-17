@@ -55,7 +55,7 @@
                 <tr>
                     <td class="text-left"
                         style="padding-right: 5px; font-size:11px; font-style: italic;">
-                        Printed on &amp;nbsp;<span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M')"/>&amp;nbsp; via &amp;nbsp;<span> <a href="www.epluscofee.com">www.epluscoffee.com</a></span></td>
+                        Printed on &amp;nbsp;<span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M')"/>&amp;nbsp; via &amp;nbsp;<span> <a href=""><span t-field="company.website"/></a></span></td>
                     <td class="text-right" style="padding-left: 5px; font-style: italic; font-size: 11px;">Page &amp;nbsp;<span class="page"/>&amp;nbsp; of &amp;nbsp;<span class="topage"/></td>
                 </tr>
             </table>
@@ -64,7 +64,6 @@
 
         <template id="mas_hr_contract">
             <!-- BEGIN COPY HERE -->
-            
             <t t-call="web.html_container">
                 <t t-foreach="docs" t-as="o">
                     <t t-set="lang" t-value="o.env.user.sudo().lang"/>
@@ -80,12 +79,6 @@
                         <t t-set="company" t-value="res_company"/>
                     </t>
                     <div class="page" style="padding-left: 40px" >
-                        <!-- <t t-if="company.watermark_img">
-                            <div class="watermark" style="position:absolute;opacity:0.08;font-size:3em;width:100%;text-align:center;z-index:1000; padding-top:300px">
-                                <img t-att-src="image_data_uri(company.watermark_img)"/>
-                                    
-                            </div>
-                        </t> -->
                         <div style="font-size: 16px; font-weight: bold; width:100%; text-align: center;"><span style="padding-bottom: 1px; border-bottom: 2px solid black;">SURAT KONTRAK KERJA</span></div>
                         <div style="font-size: 16px; font-weight: bold; width:100%; text-align: center; padding-bottom:15px;">NOMOR: &amp;nbsp;<span t-field="o.name"/></div>
                         <div style="padding-bottom: 15px;"><span>Yang Bertandatangan di bawah ini</span></div>
@@ -195,8 +188,6 @@
                         </div>
                         
                     </div>
-
-
                     </t>
                 </t>
             </t>

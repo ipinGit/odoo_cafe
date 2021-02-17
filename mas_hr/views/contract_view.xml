@@ -83,4 +83,74 @@
         </field>
     </record>
 
+    <record id="hr_hr_employee_view_form_recommendation_id" model="ir.ui.view">
+        <field name="name">hr.hr.employee.view.form.contract.duration</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//field[@name='user_id']" position="after">
+                    <field name="contract_duration"/>
+                    <field name="recommendation_id"/>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+
+
+    <record id="hr_contract_recommendation_view_form" model="ir.ui.view">
+            <field name="name">employee.recommendation.form</field>
+            <field name="model">employee.recommendation</field>
+            <field name="arch" type="xml">
+                <form string="Recommendation Form">
+                    <group col="4">
+                        <group>
+                            <field name="name"/>
+                            <field name="recommender"/>
+                            <field name="recommender_job"/>
+                        </group>
+                        <field colspan="4" name="statement_body"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="hr_contract_recommendation_view_tree" model="ir.ui.view">
+            <field name="name">employee.recommendation.tree</field>
+            <field name="model">employee.recommendation</field>
+            <field name="arch" type="xml">
+                <tree string="Recommendation Form">
+                    <field colspan="4" name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="hr_contract_recommendation_view_search" model="ir.ui.view">
+            <field name="name">employee.recommendation.search</field>
+            <field name="model">employee.recommendation</field>
+            <field name="arch" type="xml">
+                <search string="Search Recommendation Form">
+                    <field name="name" string="Recommendation Form"/>
+               </search>
+            </field>
+        </record>
+
+        <record id="action_hr_contract_recommendation" model="ir.actions.act_window">
+            <field name="name">Recommendation Form</field>
+            <field name="res_model">employee.recommendation</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="hr_contract_recommendation_view_search"/>
+        </record>
+
+        <menuitem
+            id="hr_menu_employee_recommendation"
+            action="action_hr_contract_recommendation"
+            parent="hr.menu_human_resources_configuration"
+            sequence="99"
+            groups="base.group_no_one"/>
+
+
+
 </odoo>

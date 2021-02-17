@@ -12,6 +12,7 @@
         'security/ir.model.access.csv',
         'data/hr_data.xml',
         'report/contract.xml',
+        'report/recommendation.xml',
         'report/report.xml',
         
     ],

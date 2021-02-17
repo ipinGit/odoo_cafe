@@ -4,3 +4,5 @@ mas_access_hr_resource_calendar_user,mas.hr.employee.resource.calendar.user,reso
 mas_access_hr_resource_calendar_attendance_user,mas.hr.employee.resource.calendar.attendance.user,resource.model_resource_calendar_attendance,base.group_user,1,0,0,0
 mas_access_hr_contract_type_user,hr.contract.type.user,hr_contract.model_hr_contract_type,base.group_user,1,0,0,0
 mas_access_hr_contract_user,hr.contract.user,model_hr_contract,base.group_user,1,0,0,0
+access_employee_recommendation_manager_manager,employee.recommandation.manager,model_employee_recommendation,hr_contract.group_hr_contract_manager,1,1,1,1
+mas_access_employee_recommendation_user,hr.employee.recommendation.user,model_employee_recommendation,base.group_user,1,0,0,0
