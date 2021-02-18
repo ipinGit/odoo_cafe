@@ -67,7 +67,7 @@
                             </table>
                         </div>
                         <div style="width:100%; padding-top: 15px; padding-bottom: 15px" t-field="o.recommendation_body"></div>
-                        <div style="height: 300px; width: 100%">
+                        <div style="height: 200px; width: 100%">
                             <table style="width:100%; height:100%">
                                 <colgroup>
                                     <col style="width:40%"/>
@@ -85,7 +85,7 @@
                                         <td></td>
                                         <td class="text-center">
                                             Yogyakarta, <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d %b %Y')"/><br/>
-                                            Hormat kami, <br/><br/><br/><br/><br/><br/>
+                                            Hormat kami, <br/><br/><br/><br/><br/>
                                             <span t-field="o.recommendation_id.recommender.name"/><br/>
                                             <span style="text-decoration:overline">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;<span t-field="o.recommendation_id.recommender_job"/>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</span>
                                         </td>

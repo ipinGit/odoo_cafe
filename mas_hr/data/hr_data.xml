@@ -180,7 +180,7 @@
 
             <p class="MsoNormal" style="text-align: justify; "><font style="font-size: 16px;">Pada saat {self.title.name} {self.name} bekerja di perushaana kami, {self.title.name} {self.name} menunjukkan dedikasi yang tinggi dalam bekerja. Beliau sangat bertanggung jawab atas segala pekerjaan yang kami berikan dan juga menyelesaikannya dengan baik. {self.title.name} {self.name} tidak hanya menunjukkan etos kerja yang tinggi namun juga mampu bersosialisasi dengan baik dengan rekan kerjanya. Kami amati bahwa {self.title.name} {self.name} juga mampu berkomunikasi dengan baik dengan rekan kerja, atasan, atau manajemen baik dalam hal pekerjaan maupun bukan.</font></p>
             
-            <p class="MsoNormal" style="text-align: justify; "><font style="font-size: 16px;">Saya yakin {self.title.name} {self.name} dapat berkontribusi secara luar biasa di perusahaan manapun {self.title.name} {self.name} nantinya akan bekerja. Hal ini berdasarkan penilaian kami terhadap etos kerja, kedisiplinan, serta loyalitas {self.title.name} {self.name} yang bekerja selama {self.contract_duration}.</font></p>
+            <p class="MsoNormal" style="text-align: justify; "><font style="font-size: 16px;">Kami yakin {self.title.name} {self.name} dapat berkontribusi secara luar biasa di perusahaan manapun {self.title.name} {self.name} nantinya akan bekerja. Hal ini berdasarkan penilaian kami terhadap etos kerja, kedisiplinan, serta loyalitas {self.title.name} {self.name} yang bekerja selama {self.contract_duration}.</font></p>
             
             <p class="MsoNormal" style="text-align: justify; "><font style="font-size: 16px;">Demikian surat rekomendasi kerja ini diterbitkan semoga dapat dipergunakan sebagaimana mestinya.</font></p>
             <p></p>
