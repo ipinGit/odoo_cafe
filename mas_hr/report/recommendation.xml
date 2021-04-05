@@ -64,6 +64,7 @@
                                         <td class="text-right">:</td>
                                         <td class="text-left" style="padding-left: 3px;"><span t-field="o.address_home_id and o.address_home_id.street"/></td>
                                     </tr>
+                                    
                             </table>
                         </div>
                         <div style="width:100%; padding-top: 15px; padding-bottom: 15px" t-field="o.recommendation_body"></div>
